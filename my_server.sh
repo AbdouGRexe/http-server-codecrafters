@@ -1,0 +1,1 @@
+exec pipenv run python -m app.main "$@"
