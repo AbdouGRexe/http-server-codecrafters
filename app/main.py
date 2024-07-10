@@ -11,7 +11,7 @@ def handle_http_requests(conn, addr):
         
         if start_line[0] in ['GET', 'POST', 'HEAD', 'OPTIONS']:
             path = start_line[1].split(sep=' ')[0]
-            if path != '/':
+            if path != '':
                 conn.send('HTTP/1.1 404 Not Found\r\n\r\n')
             else:
                 conn.send('HTTP/1.1 200 OK\r\n\r\n')  
