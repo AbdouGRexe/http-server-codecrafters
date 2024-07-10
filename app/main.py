@@ -1,9 +1,8 @@
 import socket
 import threading
 
-def handle_http_requests(conn, addr):
+def handle_http_requests(conn : socket.socket, addr):
     while True:
-        
         request_msg : str = conn.recv(1024).decode()
         if request_msg:
             request_parts = request_msg.split(sep='\r\n')
@@ -14,7 +13,10 @@ def handle_http_requests(conn, addr):
             if start_line[0] in ['GET ', 'POST ', 'HEAD ', 'OPTIONS ']:
                 path = start_line[1].split(sep=' ')[0]
                 if path != '':
-                    conn.send('HTTP/1.1 404 Not Found\r\n\r\n'.encode())
+                    if path == 'echo':
+                        conn.send('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\n',request_msg)
+                    else:    
+                        conn.send('HTTP/1.1 404 Not Found\r\n\r\n'.encode())
                 else:
                     conn.send('HTTP/1.1 200 OK\r\n\r\n'.encode())  
             
