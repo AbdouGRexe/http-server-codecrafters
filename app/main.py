@@ -19,7 +19,7 @@ def handle_http_requests(conn : socket.socket, addr):
             request_target : str = re.sub(pattern='GET |POST |HEAD |OPTIONS ', repl='', string= start_line)
             request_target = re.sub(pattern=' HTTP/1[.][0-1]', repl='' , string= request_target)
             
-            print(f'request target: {request_target}')
+            
             target_parts = request_target.split(sep='/')
             while '' in target_parts:
                 target_parts.remove('')
