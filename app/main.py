@@ -12,7 +12,7 @@ def handle_http_requests(conn : socket.socket, addr):
             request_parts = request_msg.split(sep='\r\n')
             
             start_line = request_parts[0]
-            user_agent = [header for header in request_parts if re.search(pattern='User-Agent: .+', string= header)][0]
+            user_agent = [header for header in request_parts if re.search(pattern='User-Agent: .+', string= header)]
             
             method = start_line.split(sep='/')[0]
             
@@ -29,7 +29,7 @@ def handle_http_requests(conn : socket.socket, addr):
                     if len(target_parts) == 1:
                         path = target_parts[0]
                         if path == 'user-agent':
-                            ua_content = re.sub(pattern='User-Agent: ', repl='', string=user_agent)
+                            ua_content = re.sub(pattern='User-Agent: ', repl='', string=user_agent[0])
                             conn.send(f'{OK_MESSAGE}Content-Type: text/plain\r\nContent-Length: {len(ua_content)}\r\n\r\n{ua_content}'.encode())
                         elif path not in []: # [] an empty db for now
                             conn.send(f'{NOT_FOUND_MSG}\r\n'.encode())
