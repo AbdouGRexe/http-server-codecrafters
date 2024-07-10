@@ -30,7 +30,7 @@ def handle_http_requests(conn : socket.socket, addr):
                         path = target_parts[0]
                         if path == 'user-agent':
                             ua_content = re.sub(pattern='User-Agent: ', repl='', string=user_agent)
-                            conn.send(f"{OK_MESSAGE}\r\nContent-Type: text/plain\r\nContent-Length: {len(ua_content)}\r\n\r\n{ua_content}".encode())
+                            conn.send(f'{OK_MESSAGE}Content-Type: text/plain\r\nContent-Length: {len(ua_content)}\r\n\r\n{ua_content}'.encode())
                         elif path not in []: # [] an empty db for now
                             conn.send(f'{NOT_FOUND_MSG}\r\n'.encode())
                         else:
