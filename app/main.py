@@ -29,7 +29,7 @@ def handle_http_requests(conn : socket.socket, addr):
                     if len(target_parts) == 1:
                         path = target_parts[0]
                         print('path is', path)
-                        if path == ' user-agent':
+                        if path == 'user-agent':
                             ua_content = re.sub(pattern='User-Agent: ', repl='', string=user_agent)
                             conn.send(f"{OK_MESSAGE}\r\nContent-Type: text/plain\r\nContent-Length: {len(ua_content)}\r\n\r\n{ua_content}".encode())
                         elif path not in []: # [] an empty db for now
