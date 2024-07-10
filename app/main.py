@@ -25,7 +25,7 @@ def handle_http_requests(conn : socket.socket, addr):
                 target_parts.remove('')
                 
             if method in ['GET ', 'POST ', 'HEAD ', 'OPTIONS ']: 
-                if request_msg != '/':
+                if request_target != '/':
                     if len(target_parts) == 1:
                         path = target_parts[0]
                         if path == 'user-agent':
