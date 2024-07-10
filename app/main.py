@@ -12,7 +12,7 @@ def handle_http_requests(conn : socket.socket, addr):
             request_parts = request_msg.split(sep='\r\n')
             
             start_line = request_parts[0]
-            user_agent = request_parts[2]
+            user_agent = [header for header in request_parts if re.search(pattern='User-Agent: .+', string= header)][0]
             
             method = start_line.split(sep='/')[0]
             
@@ -28,7 +28,6 @@ def handle_http_requests(conn : socket.socket, addr):
                 if request_msg != '/':
                     if len(target_parts) == 1:
                         path = target_parts[0]
-                        print('path is', path)
                         if path == 'user-agent':
                             ua_content = re.sub(pattern='User-Agent: ', repl='', string=user_agent)
                             conn.send(f"{OK_MESSAGE}\r\nContent-Type: text/plain\r\nContent-Length: {len(ua_content)}\r\n\r\n{ua_content}".encode())
