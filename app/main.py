@@ -14,7 +14,8 @@ def handle_http_requests(conn : socket.socket, addr):
                 path = start_line[1].split(sep=' ')[0]
                 if path != '':
                     if path == 'echo':
-                        conn.send(f'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(request_msg)}\r\n\r\n{request_msg}'.encode())
+                        header_body = start_line[2]
+                        conn.send(f'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {len(header_body)}\r\n\r\n{header_body}'.encode())
                     else:    
                         conn.send('HTTP/1.1 404 Not Found\r\n\r\n'.encode())
                 else:
