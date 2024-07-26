@@ -89,10 +89,10 @@ def parse_req(msg : str)-> dict[str, str, str, str]:
     output_dict['method'] = req_parts[0].split(' ')[0]
     output_dict['target'] = req_parts[0].split(' ')[1]
     
-    count = 0
+    count = 1
     
     for header in req_parts[1:]:        
-        if header == '' and count != 0: # if no header is present
+        if header == '' and count != 1: # if no header is present
                                         # an additional blank line is found so we skip it.
             output_dict["body"] = req_parts[count + 1]
             return output_dict         
