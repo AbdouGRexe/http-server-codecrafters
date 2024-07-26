@@ -1,4 +1,5 @@
 from io import TextIOWrapper
+import sys
 import socket
 import threading
 import re
@@ -41,10 +42,12 @@ def get_response(req : dict) -> dict[str, str, str]:
         
         if str(req['target']).startswith('/files'):            
             res_GET['status-code'] = 200
-            f_path = req['target'].split('/')[2]
-              
+            f_name = req['target'].split('/')[2]
+            f_directory = sys.argv[2]
+            f_path = f'{f_directory}/{f_name}'
+            
             try:
-                f : TextIOWrapper = open(f_path, "+rt")
+                f : TextIOWrapper = open(f_name, "+rt")
                 res_GET['response-body'] = f.read()
                 res_GET['content-type'] = 'application/octet-stream'          
             except OSError:
