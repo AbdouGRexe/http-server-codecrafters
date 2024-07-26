@@ -47,7 +47,7 @@ def get_response(req : dict) -> dict[str, str, str]:
             f_path = f'{f_directory}/{f_name}'
             
             try:
-                f : TextIOWrapper = open(f_name, "+rt")
+                f : TextIOWrapper = open(f_path, "+rt")
                 res_GET['response-body'] = f.read()
                 res_GET['content-type'] = 'application/octet-stream'          
             except OSError:
