@@ -9,52 +9,67 @@ FORMAT = 'utf-8'
 
 def get_response(req : dict) -> dict[str, str, str]:
     
-    res_GET = {
+    response = {
         'status-code': 404,
         'content-type': "",
         'response-body': None,
     }
     
     if not req:
-        res_GET['status-code'] = 400 # Bad request
-        return res_GET
+        response['status-code'] = 400 # Bad request
+        return response
     
     if req['method'] not in ['GET', 'POST', 'PUT' , 'HEAD', 'OPTIONS']:
-        res_GET['status-code'] = 501 # unsupported method 
-        return res_GET
+        response['status-code'] = 501 # unsupported method 
+        return response
     
     headers = [str(key) for key in req['headers'].keys()]
     url_paths = ['/']
     if req['method'] == 'GET':
         
         if str(req['target']) in url_paths:
-            res_GET['status-code'] = 200
+            response['status-code'] = 200
         
         if str(req['target']).lower().strip('/') in headers:
-            res_GET['status-code'] = 200
-            res_GET['response-body'] = req['headers'][req['target'].lower().strip('/')]
-            res_GET['content-type'] = 'text/plain'
+            response['status-code'] = 200
+            response['response-body'] = req['headers'][req['target'].lower().strip('/')]
+            response['content-type'] = 'text/plain'
         
         if str(req['target']).startswith('/echo'):
-            res_GET['status-code'] = 200
-            res_GET['response-body'] = req['target'].split('/')[2]
-            res_GET['content-type'] = 'text/plain'
+            response['status-code'] = 200
+            response['response-body'] = req['target'].split('/')[2]
+            response['content-type'] = 'text/plain'
         
         if str(req['target']).startswith('/files'):            
-            res_GET['status-code'] = 200
+            response['status-code'] = 200
             f_name = req['target'].split('/')[2]
             f_directory = sys.argv[2]
             f_path = f'{f_directory}/{f_name}'
             
             try:
                 f : TextIOWrapper = open(f_path, "+rt")
-                res_GET['response-body'] = f.read()
-                res_GET['content-type'] = 'application/octet-stream'          
+                response['response-body'] = f.read()
+                response['content-type'] = 'application/octet-stream'          
             except OSError:
-                res_GET['status-code'] = 404
+                response['status-code'] = 404
                     
+    if req['method'] == 'POST':
+        if str(req['target']).startswith('/files'):
+            f_name = req['target'].split('/')[2]
+            f_directory = sys.argv[2]
+            f_path = f'{f_directory}/{f_name}'
+            try:
+                f = open(f_path, '+a')
+                f.write(req['body'])
+                response['status-code'] = 201
+            except:
+                response['status-code'] = 500    
+                
+            
+            
         
-        return res_GET     
+        
+    return response     
         
 
 # Breaks down http request and verifies syntax
