@@ -6,7 +6,7 @@ import re
 
 FORMAT = 'utf-8'
 
-def compress_content(content: str) -> bytes:
+def compress_content(content: str, cpr_type: str = 'gzip') -> bytes:
     pass
 
 
@@ -57,14 +57,18 @@ def get_response(req : dict) -> dict[str, str, str, str]:
             except OSError:
                 response['status-code'] = 404
         
+        
         if response['response-body'] is not None:
             if 'accept-encoding' not in headers:
                 return response
             
-            if req['headers']['accept-encoding'] == 'gzip':
-                compress_content(response['response-body'])    
-                response['content-enc'] = 'gzip'                    
-                    
+            c_encodings = req['headers']['accept-encoding'].split(', ') 
+            for enc in c_encodings:
+                if enc in ['gzip']:
+                    response['content-enc'] = enc
+                    compress_content(response['response-body'], enc)    
+                    break                    
+                                        
     if req['method'] == 'POST':
         if str(req['target']).startswith('/files'):
             f_name = req['target'].split('/')[2]
