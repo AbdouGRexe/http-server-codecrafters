@@ -9,7 +9,7 @@ FORMAT = 'utf-8'
 def compress_content(content: str, cpr_type: str = 'gzip') -> bytes:
     match cpr_type:
         case 'gzip':
-            return gzip.compress(data=content.encode('ASCII'))
+            return gzip.compress(data=content.encode())
 
 
 def get_response(req : dict) -> dict[str, str, str, str]:
@@ -68,7 +68,7 @@ def get_response(req : dict) -> dict[str, str, str, str]:
             for enc in c_encodings:
                 if enc in ['gzip']:
                     response['content-enc'] = enc
-                    response['response-body'] = compress_content(response['response-body'], enc).decode('ASCII')    
+                    response['response-body'] = compress_content(response['response-body'], enc).decode()    
                     break                    
                                         
     if req['method'] == 'POST':
