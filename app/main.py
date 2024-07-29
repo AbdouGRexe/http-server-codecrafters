@@ -6,12 +6,16 @@ import re
 
 FORMAT = 'utf-8'
 
+def compress_content(content: str) -> bytes:
+    pass
 
-def get_response(req : dict) -> dict[str, str, str]:
+
+def get_response(req : dict) -> dict[str, str, str, str]:
     
     response = {
         'status-code': 404,
         'content-type': "",
+        'content-enc' : "",
         'response-body': None,
     }
     
@@ -52,6 +56,14 @@ def get_response(req : dict) -> dict[str, str, str]:
                 response['content-type'] = 'application/octet-stream'          
             except OSError:
                 response['status-code'] = 404
+        
+        if response['response-body'] is not None:
+            if 'accept-encoding' not in headers:
+                return response
+            
+            if req['headers']['accept-encoding'] == 'gzip':
+                compress_content(response['response-body'])    
+                response['content-enc'] = 'gzip'                    
                     
     if req['method'] == 'POST':
         if str(req['target']).startswith('/files'):
