@@ -2,12 +2,14 @@ from io import TextIOWrapper
 import sys
 import socket
 import threading
-import re
+import gzip
 
 FORMAT = 'utf-8'
 
 def compress_content(content: str, cpr_type: str = 'gzip') -> bytes:
-    pass
+    match cpr_type:
+        case 'gzip':
+            return gzip.compress(data=content.encode('ASCII'))
 
 
 def get_response(req : dict) -> dict[str, str, str, str]:
@@ -66,7 +68,7 @@ def get_response(req : dict) -> dict[str, str, str, str]:
             for enc in c_encodings:
                 if enc in ['gzip']:
                     response['content-enc'] = enc
-                    compress_content(response['response-body'], enc)    
+                    response['response-body'] = compress_content(response['response-body'], enc).encode('ASCII')    
                     break                    
                                         
     if req['method'] == 'POST':
