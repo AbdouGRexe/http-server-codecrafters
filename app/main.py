@@ -9,7 +9,7 @@ FORMAT = 'utf-8'
 def compress_content(content: str, cpr_type: str = 'gzip') -> bytes:
     match cpr_type:
         case 'gzip':
-            return gzip.compress(data=content.encode('ascii'))
+            return gzip.compress(data=content.encode())
 
 
 def get_response(req : dict) -> dict[str, str, str, str]:
@@ -148,7 +148,7 @@ def handle_client(conn : socket.socket, addr):
                 elif not encoding:
                     message = f"HTTP/1.1 200 OK\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content}"            
                 else:
-                    message = f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content}"            
+                    message = f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content.decode()}"            
 
         try:
             conn.send(message.encode(FORMAT))
