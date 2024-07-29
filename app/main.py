@@ -148,7 +148,7 @@ def handle_client(conn : socket.socket, addr):
                 elif not encoding:
                     message = f"HTTP/1.1 200 OK\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content}"            
                 else:
-                    message = f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content.decode()}"            
+                    message = b"".join([f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n",content])            
 
         try:
             conn.send(message.encode(FORMAT))
