@@ -15,7 +15,7 @@ def get_response(req : dict) -> dict[str, str, str, str]:
     response = {
         'status-code': 404,
         'content-type': "",
-        'content-enc' : "",
+        'content-enc' : None,
         'response-body': None,
     }
     
@@ -123,6 +123,7 @@ def handle_client(conn : socket.socket, addr):
         
         status: int = response['status-code']
         content = response['response-body']
+        encoding = response['content-enc']
         if content:
             context : tuple[int, str] = (len(content), response['content-type'])
         
@@ -138,8 +139,11 @@ def handle_client(conn : socket.socket, addr):
             case 200:
                 if not content:
                     message = "HTTP/1.1 200 OK\r\n\r\n"
-                else:
+                elif not encoding:
                     message = f"HTTP/1.1 200 OK\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content}"            
+                else:
+                    message = f"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding}\r\nContent-Type: {context[1]}\r\nContent-Length: {context[0]}\r\n\r\n{content}"            
+
         try:
             conn.send(message.encode(FORMAT))
         except:
