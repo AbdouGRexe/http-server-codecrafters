@@ -68,7 +68,7 @@ def get_response(req : dict) -> dict[str, str, str, str]:
             for enc in c_encodings:
                 if enc in ['gzip']:
                     response['content-enc'] = enc
-                    response['response-body'] = compress_content(response['response-body'], enc).encode('ASCII')    
+                    response['response-body'] = compress_content(response['response-body'], enc).decodecode('ASCII')    
                     break                    
                                         
     if req['method'] == 'POST':
